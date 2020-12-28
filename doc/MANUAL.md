@@ -206,7 +206,6 @@ Here is nightly-fresh binary build of
 [ECP5 opensource tools for all platforms](https://github.com/open-tool-forge/fpga-toolchain/releases).
 This archive has ECP5 compilers and openFPGALoader
 which can be used for ULX3S.
-
 It is made for
 [OrangeCrab](https://gregdavill.github.io/OrangeCrab/r0.2/),
 interesting miniature ECP5 board, a must-have item.
@@ -260,7 +259,15 @@ fast, compatible and work with Lattice Diamond native programmer.
 Get Lattice original FT2232 JTAG cable or some generic FT2232 JTAG like
 [FT2232 breakout board from DangerousPrototypes](http://dangerousprototypes.com/docs/FT2232_breakout_board).
 
-# Programming over USB port "US1"
+# USB port "US1" factory default
+
+If you have receved your fresh board it will have FT231X already
+programmed, so you can skip this ftx_prog section. You can get back
+here when want to return board to factory default state.
+
+It is good idea to write on a papaer or save in a file original
+USB serial number and description strings of your board if
+accidentaly overwritten.
 
 Factory default (empty) onboard FT231X has to be initialized in order
 to be autodetected by "ujprog" or "FleaFPGA-JTAG" use ftx_prog.
@@ -281,6 +288,8 @@ wake up board when FT231X is enumerated by host computer (PC).
 Optionally you can change "45K" to "25K" or "12K" in regard with FPGA chip size.
 Re-plug the USB and it will appear as new name which can be autodetected
 with USB-serial JTAG tool.
+
+# Programming over USB port "US1"
 
 If running linux, some udev rule is practical in order to allow non-root users
 (in given example, members of "dialout" group) access to the USB-serial JTAG:
@@ -512,6 +521,49 @@ write config to eeprom:
 
 re-plug USB to reload new eeprom content.
 
+# Preparing WiFi (passthru)
+
+Passthru bitstream should be written to FPGA config flash
+in order to program ESP32 FLASH and efuse by US1 usb-serial port.
+Get binary passthru suitable for ULX3S board version and
+FPGA chip 12/25/45/85 from 
+[ulx3s-bin passhtru](https://github.com/emard/ulx3s-bin/tree/master/fpga/passthru)
+or compile it from [ULX3S passthru source](https://github.com/emard/ulx3s-passthru)
+
+    fujprog -j flash passthru.bit
+
+"Passthru" bitstream configures FPGA to route lines from USB-serial to ESP-32.
+
+# Preparing WiFi (ESP32 efuse)
+
+Skip this section if unsure.
+
+ESP32 has one-time programmable efuses that need to be
+properly set for using ESP32 with SD card.
+SD card needs pull-up on all of its pins.
+ESP32 with unprogrammed efuse needs pin GPIO12 pull-down in
+order to boot from its FLASH and as GPIO12 is shared with
+SD we have conflicting situation which can be resolved by
+programming efuse.
+
+efuse should be programmed by ULX3S manufacturer during test and setup phase.
+A wrong efuse setting will make ESP32 module unbootable and only
+fix is to replace it with new ESP32.
+
+Remove SD card and burn efuse to ignore GPIO12 by fixing internal
+module's FLASH voltage to 3.3V. This is in assumption that inside of
+ESP32 is FLASH that works at 3.3V and it is currently true for all known
+ESP32 WROOM modules mounted on ULX3S. If you have WROVER module, efuse
+setting is different for 1.8V FLASH or it may work with SD card without
+this efuse setting so don't do it. Here are archived
+[ESP32 serial tools](https://github.com/emard/ulx3s-bin/tree/master/esp32/serial-uploader)
+which are known to work or you can use latest from ESP.
+
+    # WROVER only - don't apply to WROOM
+    python serial-uploader/espefuse.py --port /dev/ttyUSB0 set_flash_voltage 3.3V
+
+After this there is no way back. ESP32 should boot again and accept SD cards.
+
 # Programming over WiFi (ESP32 micropython)
 
 [Micropython ESP32 ECP5 programmer](https://github.com/emard/esp32ecp5)
@@ -533,12 +585,9 @@ memory to buffer entire bitstream delivered in a long single SVF command.
 
     ddtcmd -oft -svfsingle -revd -maxdata 8 -if ulx3s_flash.xcf -of bitstream.svf
 
-To start using ESP-32 first you need to compile
-[ULX3S passthru](https://github.com/emard/ulx3s-passthru)
-and upload it using FleaFPGA-JTAG or external JTAG programmer.
-"Passthru" bitstream configures FPGA to route lines from USB-serial to ESP-32.
-
-Then you need to install Arduino and its ESP-32 support, and
+Write "passthru" to FPGA config flash as described above in section "Preparing WiFi
+(passthru)".
+Install Arduino and its ESP-32 support, and
 install Emard's library [LibXSVF-ESP](https://github.com/emard/LibXSVF-ESP),
 required library dependencies and 
 [ESP-32 SPIFFS uploader](https://github.com/me-no-dev/arduino-esp32fs-plugin/releases/tag/v0.1)
@@ -562,6 +611,7 @@ at websvf window click "Tools->ESP32 Sketch Data Upload".
 successful upload will finish with same as above.
 
 ESP32 will try to connect to your local WiFi as client with
+
 default ssid=websvf password=12345678
 Insert SD card with file "ulx3s-wifi.conf" in SD root directory:
 
@@ -753,13 +803,157 @@ Correct pinout is this:
 
 ![AUDIO JACK TO CINCH](/pic/cinch_jack.jpg)
 
+# i2s-Quality Audio Module
+
+Onboard audio jack has cheap and educative 4-bit DAC
+which is good for audible tones but may be noisy.
+Better audio quality can be obtained from external
+I2S module PCM5102 for clean stereo PCM 192kHz 16-bit sound.
+Module also has amplifiers for headphones, it is loud enough.
+
+On ebay it is sold for about 4$.
+
+[PCM5102 I2S Interface DAC Decoder GY-PCM5102 I2S Player Module for Raspberry Pi](https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2047675.m570.l1313&_nkw=PCM5102&_sacat=0)
+
+![I2S AUDIO MODULE](/pic/pcm5102.jpg)
+
+# Fast ADC/DAC
+
+Onboard ADC allows total bandwith of 1 MSa/s, shared for all channels used.
+For faster ADC/DAC there are options to connect external boards:
+
+Module AN108 32 MSa/s 8-bit input AD9280 and 125 MSa/s 8-bit output AD9708.
+It is not directly pluggable, but
+[gojimmypi made adapter](https://github.com/gojimmypi/ulx3s-adda/),
+which can be ordered from oshpark:
+[ULX3S FPGA to AD/DA Converter Adapter
+Board](https://oshpark.com/profiles/gojimmypi).
+
+Module AN926 12-bit 2-ch 50 MSa/s AD9226 is "almost" directly pluggable,
+user has to re-crimp or modify few lines of a 40-pin flat cable and it
+should fit.
+
+AN108 8-bit AD/DA 32 MSa/s IN, 125 Msa/s OUT
+![AN108 8-bit AD/DA 32 MSa/s IN, 125 Msa/s OUT](/pic/an108.jpg)
+
+AN926 12-bit 2-ch AD 50 MSa/s IN
+![AN926 12-bit 2-ch 50 MSA/s](/pic/an926.png)
+
+# Board differences
+
+v1.7 prototype
+
+The first prototype made. Has 45F and 32MB SDRAM.
+To get ESP32 working it has to be manually wire patched.
+Flash is connected as 1-bit SPI, US2 connector doesn't have
+all lines needed to be both host and device. This board
+doesn't have series C to GPDI connector which makes it
+very sensitive to static discharge or bad GND connection.
+
+Main reason for redesign was to get ESP32 working properly.
+BTN UP, BTN RIGHT and some other pins have changed routes to
+FPGA pins in later versions.
+
+v2.0.x and v3.0.x
+
+Very successful and widely produced boards. There are no
+important differences between v2.0.x, v2.1.x and v3.0.x to the user.
+
+Most differences are in thermal management for soldering and
+reducing number of faulty produced boards. Significant problems
+were at version v2.0.5 and earlier with BGA soldering and "tombstoning"
+effect when resistors rise up due to unequal local temperature between
+pads.
+
+FLASH is connected as 4-bit QSPI, supports 1-bit SPI but user
+must take care to hold unused lines at '1' (logic high level)
+otherwise some ISSI FLASH chips will not work because of crosstalk.
+
+BTNs are slightly different routed.
+
+US2 connector now has 6 routes to FPGA, supports both device and host mode,
+differential and single-ended connections, low-speed 1.5 Mbps
+and high-speed 12Mbps.
+
+GPDI has 220nF series capacitors for coupling.
+
+Around v3.0.5 some unused FTDI LED line was connected to unused
+pin of FPGA in schematics with idea to create fully connected secondary
+openocd JTAG channel from FTDI to debug FPGA softcore RISC5 CPUs with linux
+on litex and saxonsoc. Such FTDI JTAG is fully functional but very slow
+and linux needs big data thruput so in practice external JTAG is used
+there anyway.
+
+Main reason for redesign was to allow placement of
+ESP32-WROVER-E modules 4MB RAM/16MB FLASH.
+Micropython is now used on ESP32 to control 
+ULX3S boards. It is user-friendly but RAM hungry.
+
+Second reason was some RF interference with ESP32.
+When video signal 800x600 or 1024x768 is generated
+and monitor connected to GPDI port, then ESP32 almost
+completely looses WiFi signal. When GPDI is unplugged,
+connection is restored.
+
+SD card slot need footprint for compatibility
+alternative with slide-in/out reliable but inxepensive
+SD card slot which is on-stock available from common suppliers.
+
+RTC clock runs 30 ppm too fast.
+
+GPDI hotplug HPD doesn't work because of C coupling.
+
+No SERDES.
+
+v3.1.4
+
+New prototype, currently tested.
+
+Board accepts ESP32-WROOM and ESP32-WROVER, ESP32 JTAG glitch was
+fixed by connecting JTAG to different ESP32 pins. ESP32 wiring
+now should provide ESP32-RMII connectivity from WiFi to FPGA.
+
+GPDI series C lowered from 220nF to 22nF to reduce interference. 
+GPDI hotplug line now has R coupling and protection Zener
+diode which should make hotplug line work.
+
+Board accepts old and new SD card slots. Old non-hinged SD slots
+with landing contacts were cheapest and I liked them most, but are
+no longer available from western suppliers. They may be still available
+directly from china with longer ordering times. Hinged SD card slots
+are available from western suppliers, have landing contacts too and make
+good connectivity but hinge is fragile and makes insertion procedure longer.
+Now board supports quick slide-in/out SD card slots with wiping contacts,
+similar as RPI, on-stock available from western suppliers. Contact is good
+but as those are wiping contacts, friction forces will
+slowly wear out contacts at each insertion. Luckily all SD
+operations can be done remotely by ESP32 so number of insertions
+is negligible.
+
+7-pin OLED/LCD header is extended to 8-pin and shared with
+3 SERDES input differential pairs (1xRXCLK, 2xRXDATA) coupled with
+series C=22nF. Additional 2 SERDES pairs (1xRXDATA, 1xTXDATA)
+are routed only to C=22nF for possible manual wire patching.
+
+RTC load capacitors are increased from 3.3pF to 4.7pF in attempt
+to reduce clock error below 20ppm.
+
+Generally all should work as before except ESP32 pinout is now
+different. wifi_gpio16 and wifi_gpio17 are gone because WROVER
+needs them for internal RAM, but here are many new available, so
+wifi_gpio26 and wifi_gpio27 can be used instead for example.
+
 # Board Versions
 
 This project is open source, freely downloadable so there can be
 as many versions as here are git commits.
 
-v3.0.3 is currently the only version which is officially being sold
-at [skriptarnica](http://skriptarnica.hr/vijest.aspx?newsID=1466).
+v3.0.3 is sold at
+[skriptarnica](http://skriptarnica.hr/vijest.aspx?newsID=1466).
+
+v3.0.8 is sold at
+[Mouser](https://hr.mouser.com/Search/Refine?Keyword=ulx3s)
+
 Other versions are either prototypes or independently produced.
 
 Up to our knowledge those versions are currently circulating around.
@@ -767,24 +961,25 @@ All listed versions should work if all parts (notably BGA) are properly
 soldered.
 
     PCB       assembly       quantity                constraints
-    version   facility       produced   date         compatibility   note
-    -------   ------------   --------   ----------   -------------   --------
+    version   facility       produced   date         compatibility   note       SDRAM                 FLASH
+    -------   ------------   --------   ----------   -------------   --------   ----------------      ------------
     v1.7      PCBWay         8          dec 2017     v17patch        prototype
     v1.7      lemilica.com   1          jan 2018     v17patch        handwork
     v1.8      PCBWay         10         may 2018     v18             prototype
-    v2.0.3    q3k            1          aug 2018     v20             handwork
-    v2.1.2    INEM-KONČAR    35         sep 2018     v20             prototype
-    v3.0.3    INEM-KONČAR    220        oct 2018     v20             for sale
-    v2.0.5    Marvin         1          nov 2018     v20             handwork
-    v2.0.5    Markus         1          dec 2018     v20             handwork
-    v3.0.3    INEM-KONČAR    35         jan 2019     v20             for sale
-    v2.0.5    Zvone          2          mar 2019     v20             handwork
+    v2.0.3    q3k            1          aug 2018     v20             handwork   MT48LC16M16A2TG       IS25LP128F-JBLE
+    v2.1.2    INEM-KONČAR    35         sep 2018     v20             prototype  MT48LC16M16A2TG       IS25LP128F-JBLE
+    v3.0.3    INEM-KONČAR    220        oct 2018     v20             for sale   MT48LC16M16A2TG       IS25LP032D-JNLE-TR
+    v2.0.5    Marvin         1          nov 2018     v20             handwork   MT48LC16M16A2TG       S25FL064L-ABMF
+    v2.0.5    Markus         1          dec 2018     v20             handwork   MT48LC16M16A2TG       S25FL064L-ABMF
+    v3.0.3    INEM-KONČAR    35         jan 2019     v20             for sale   MT48LC16M16A2TG       IS25LP128F-JBLE
+    v2.0.5    Zvone          2          mar 2019     v20             handwork   MT48LC16M16A2TG       S25FL064L-ABMF
     v3.0.6    Sam Littlewood 2          mar 2019     v20             handwork
     v3.0.7    Kalle          1          jul 2019     v20             handwork
-    v3.0.7    Watterott      8          aug 2019     v20             for sale
+    v3.0.7    Watterott      8          aug 2019     v20             for sale   AS4C32M16SB-7TCN      W25Q128JVSIQ
     v3.0.3    Anil Gurses    1          aug 2019     v20             handwork
     v3.0.8    SierraCircuits 1          oct 2019     v20             prototype
     v3.0.8    Lolsborn       1          oct 2019     v20             handwork
-    v3.0.3    INEM-KONČAR    220        oct 2019     v20             for sale
-    v3.0.7    Watterott      88         nov 2019     v20             for sale
-    v3.0.8    INEM-KONČAR    824        jul 2020     v20             for sale
+    v3.0.3    INEM-KONČAR    220        oct 2019     v20             for sale   M12L2561616A-6TG2T    W25Q128JVSIQ
+    v3.0.7    Watterott      88         nov 2019     v20             for sale   AS4C32M16SB-7TCN      W25Q128JVSIQ
+    v3.0.8    INEM-KONČAR    1000       jul 2020     v20             for sale   IS42S16160G-7TL-TR    W25Q128JVSIQ
+    v3.1.4    INTERGALAKTIK  1          nov 2020     v31             prototype  MT48LC16M16A2TG-6A    W25Q128JVSIQ

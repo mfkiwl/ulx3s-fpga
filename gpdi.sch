@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 5 11
 Title "ULX3S"
 Date ""
-Rev "1.0.2"
+Rev "1.0.5"
 Comp "EMARD"
 Comment1 "General Purpose Differential Interface"
 Comment2 "Digital Video and Ethernet"
@@ -34,7 +34,8 @@ F 13 "C427307" H 8950 2950 50  0001 C CNN "LCSC"
 F 14 "10029449-111RLF" H 8950 2950 50  0001 C CNN "Onlinecomponents"
 F 15 "0.364$" H 8950 2950 50  0001 C CNN "price100_Onlinecomponents"
 F 16 "FX001" H 8950 2950 50  0001 C CNN "Koncar"
-F 17 "T" H 8950 2950 50  0001 C CNN "Side"
+F 17 "76T8273" H 8950 2950 50  0001 C CNN "Newark"
+F 18 "T" H 8950 2950 50  0001 C CNN "Side"
 	1    8950 2950
 	1    0    0    -1  
 $EndComp
@@ -104,21 +105,10 @@ F 3 "" H 8700 2200 60  0000 C CNN
 	1    8700 2200
 	0    1    -1   0   
 $EndComp
-$Comp
-L power:+5V #PWR095
-U 1 1 58D6907F
-P 8450 3800
-F 0 "#PWR095" H 8450 3650 50  0001 C CNN
-F 1 "+5V" H 8450 3940 50  0000 C CNN
-F 2 "" H 8450 3800 50  0000 C CNN
-F 3 "" H 8450 3800 50  0000 C CNN
-	1    8450 3800
-	0    -1   1    0   
-$EndComp
 Text GLabel 6950 3900 0    60   Input ~ 0
-FPDI_ETH-
+FPDI_HPD
 Text GLabel 6950 3400 0    60   Input ~ 0
-FPDI_ETH+
+FPDI_UTIL
 Text GLabel 6950 2100 0    60   Input ~ 0
 FPDI_D2+
 Text GLabel 6950 2300 0    60   Input ~ 0
@@ -135,8 +125,8 @@ Text GLabel 6950 3000 0    60   Input ~ 0
 FPDI_CLK+
 Text GLabel 6950 3200 0    60   Input ~ 0
 FPDI_CLK-
-Text GLabel 8500 3300 0    60   Input ~ 0
-GPDI_CEC
+Text GLabel 6950 3300 0    60   Input ~ 0
+FPDI_CEC
 Text GLabel 8500 3500 0    60   Input ~ 0
 GPDI_SCL
 Text GLabel 8500 3600 0    60   Input ~ 0
@@ -153,9 +143,11 @@ F 4 "www.yageo.com" V 6100 4700 50  0001 C CNN "MNF1_URL"
 F 5 "AC0603FR-10100KL" V 6100 4700 50  0001 C CNN "MPN"
 F 6 "71-RCA0603100KJNEC" V 6100 4700 50  0001 C CNN "Mouser"
 F 7 "71-CRCW0603100KFKEAC" V 6100 4700 50  0001 C CNN "Mouse_r2"
-F 8 "P100KHCT-ND" V 6100 4700 50  0001 C CNN "Digikey"
-F 9 "C73806" V 6100 4700 50  0001 C CNN "LCSC"
-F 10 "FR003" V 6100 4700 50  0001 C CNN "Koncar"
+F 8 "311-100KHRCT-ND" V 6100 4700 50  0001 C CNN "Digikey"
+F 9 "P100KHCT-ND" V 6100 4700 50  0001 C CNN "Digike_y2"
+F 10 "08AH9140" V 6100 4700 50  0001 C CNN "Newark"
+F 11 "C73806" V 6100 4700 50  0001 C CNN "LCSC"
+F 12 "FR003" V 6100 4700 50  0001 C CNN "Koncar"
 	1    6100 4700
 	1    0    0    -1  
 $EndComp
@@ -197,7 +189,7 @@ L Device:C C18
 U 1 1 58D92807
 P 6100 5900
 F 0 "C18" H 6125 6000 50  0000 L CNN
-F 1 "470pF" H 6125 5800 50  0000 L CNN
+F 1 "100pF" H 6125 5800 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 6138 5750 50  0001 C CNN
 F 3 "" H 6100 5900 50  0000 C CNN
 	1    6100 5900
@@ -268,7 +260,7 @@ FPDI_D2-
 Text GLabel 4350 2400 2    60   Input ~ 0
 FPDI_CLK-
 Text GLabel 4350 2200 2    60   Input ~ 0
-FPDI_ETH-
+FPDI_HPD
 Text GLabel 2850 3100 0    60   Input ~ 0
 FPDI_D1+
 Text GLabel 2850 3400 0    60   Input ~ 0
@@ -276,13 +268,13 @@ FPDI_D2+
 Text GLabel 2850 2400 0    60   Input ~ 0
 FPDI_CLK+
 Text GLabel 2850 2200 0    60   Input ~ 0
-FPDI_ETH+
+FPDI_UTIL
 Text GLabel 4350 3500 2    60   Input ~ 0
 FPDI_SCL
 Text GLabel 4350 2300 2    60   Input ~ 0
 FPDI_SDA
-Text GLabel 1350 2300 0    60   Input ~ 0
-GPDI_CEC
+Text GLabel 2850 2300 0    60   Input ~ 0
+FPDI_CEC
 Text GLabel 4350 2900 2    60   Input ~ 0
 GN22
 Text GLabel 4350 2500 2    60   Input ~ 0
@@ -334,15 +326,11 @@ Wire Wire Line
 Wire Wire Line
 	8750 3200 7700 3200
 Wire Wire Line
-	8750 3300 8500 3300
-Wire Wire Line
-	8750 3400 7400 3400
+	8750 3400 7700 3400
 Wire Wire Line
 	8750 3500 8500 3500
 Wire Wire Line
 	8750 3700 8700 3700
-Wire Wire Line
-	8750 3900 7700 3900
 Wire Wire Line
 	8750 3800 8450 3800
 Wire Wire Line
@@ -375,7 +363,7 @@ Connection ~ 5050 5450
 Wire Wire Line
 	6100 4450 6300 4450
 $Comp
-L lfe5bg381:LFE5U-85F-6BG381C U1
+L lfe5bg381:LFE5UM-85F-6BG381C U1
 U 2 1 5A07A906
 P 3600 2900
 AR Path="/5A07A906" Ref="U1"  Part="2" 
@@ -392,20 +380,14 @@ $EndComp
 $Comp
 L Device:R R61
 U 1 1 5A0777ED
-P 1600 2300
-F 0 "R61" V 1680 2300 50  0000 C CNN
-F 1 "549" V 1600 2300 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 1530 2300 50  0001 C CNN
-F 3 "" H 1600 2300 50  0000 C CNN
-	1    1600 2300
-	0    -1   -1   0   
+P 7200 3300
+F 0 "R61" V 7350 3300 50  0000 C CNN
+F 1 "549" V 7200 3300 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7130 3300 50  0001 C CNN
+F 3 "" H 7200 3300 50  0000 C CNN
+	1    7200 3300
+	0    1    1    0   
 $EndComp
-Wire Wire Line
-	1750 2300 2850 2300
-Wire Wire Line
-	1450 2300 1350 2300
-Text Label 1800 2300 0    60   ~ 0
-FPDI_CEC
 Text Notes 5150 6600 0    60   ~ 0
 i2c shared with RTC\non "power" sheet
 Text Notes 1600 2850 0    60   ~ 0
@@ -421,66 +403,44 @@ USB_FPGA_D+
 Text GLabel 4350 2800 2    60   Input ~ 0
 USB_FPGA_D-
 $Comp
-L Device:C C36
-U 1 1 5A878883
-P 7250 3400
-F 0 "C36" V 7300 3500 50  0000 L CNN
-F 1 "220nF" V 7300 3100 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 7288 3250 50  0001 C CNN
-F 3 "" H 7250 3400 50  0000 C CNN
-	1    7250 3400
-	0    -1   1    0   
-$EndComp
-$Comp
-L Device:C C37
-U 1 1 5A878B40
-P 7550 3900
-F 0 "C37" V 7600 3950 50  0000 L CNN
-F 1 "220nF" V 7600 3600 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 7588 3750 50  0001 C CNN
-F 3 "" H 7550 3900 50  0000 C CNN
-	1    7550 3900
-	0    -1   1    0   
-$EndComp
-$Comp
-L Device:C C45
+L Device:C C44
 U 1 1 5A87EC41
 P 7250 3000
-F 0 "C45" V 7300 3050 50  0000 L CNN
-F 1 "220nF" V 7300 2700 50  0000 L CNN
+F 0 "C44" V 7300 3050 50  0000 L CNN
+F 1 "22nF" V 7300 2750 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7288 2850 50  0001 C CNN
 F 3 "" H 7250 3000 50  0000 C CNN
 	1    7250 3000
 	0    -1   1    0   
 $EndComp
 $Comp
-L Device:C C41
+L Device:C C45
 U 1 1 5A87EC93
 P 7550 3200
-F 0 "C41" V 7600 3250 50  0000 L CNN
-F 1 "220nF" V 7600 2900 50  0000 L CNN
+F 0 "C45" V 7600 3250 50  0000 L CNN
+F 1 "22nF" V 7600 2950 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7588 3050 50  0001 C CNN
 F 3 "" H 7550 3200 50  0000 C CNN
 	1    7550 3200
 	0    -1   1    0   
 $EndComp
 $Comp
-L Device:C C40
+L Device:C C43
 U 1 1 5A87EEE5
 P 7550 2900
-F 0 "C40" V 7600 2950 50  0000 L CNN
-F 1 "220nF" V 7600 2600 50  0000 L CNN
+F 0 "C43" V 7600 2950 50  0000 L CNN
+F 1 "22nF" V 7600 2650 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7588 2750 50  0001 C CNN
 F 3 "" H 7550 2900 50  0000 C CNN
 	1    7550 2900
 	0    -1   1    0   
 $EndComp
 $Comp
-L Device:C C44
+L Device:C C42
 U 1 1 5A87EF45
 P 7250 2700
-F 0 "C44" V 7300 2750 50  0000 L CNN
-F 1 "220nF" V 7300 2400 50  0000 L CNN
+F 0 "C42" V 7300 2750 50  0000 L CNN
+F 1 "22nF" V 7300 2450 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7288 2550 50  0001 C CNN
 F 3 "" H 7250 2700 50  0000 C CNN
 	1    7250 2700
@@ -493,22 +453,22 @@ Wire Wire Line
 Wire Wire Line
 	7400 3200 6950 3200
 $Comp
-L Device:C C39
+L Device:C C41
 U 1 1 5A87F247
 P 7550 2600
-F 0 "C39" V 7600 2650 50  0000 L CNN
-F 1 "220nF" V 7600 2300 50  0000 L CNN
+F 0 "C41" V 7600 2650 50  0000 L CNN
+F 1 "22nF" V 7600 2350 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7588 2450 50  0001 C CNN
 F 3 "" H 7550 2600 50  0000 C CNN
 	1    7550 2600
 	0    -1   1    0   
 $EndComp
 $Comp
-L Device:C C43
+L Device:C C40
 U 1 1 5A87F2A7
 P 7250 2400
-F 0 "C43" V 7300 2450 50  0000 L CNN
-F 1 "220nF" V 7300 2100 50  0000 L CNN
+F 0 "C40" V 7300 2450 50  0000 L CNN
+F 1 "22nF" V 7300 2150 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7288 2250 50  0001 C CNN
 F 3 "" H 7250 2400 50  0000 C CNN
 	1    7250 2400
@@ -519,22 +479,22 @@ Wire Wire Line
 Wire Wire Line
 	7400 2600 6950 2600
 $Comp
-L Device:C C42
+L Device:C C38
 U 1 1 5A87F538
 P 7250 2100
-F 0 "C42" V 7300 2150 50  0000 L CNN
-F 1 "220nF" V 7300 1800 50  0000 L CNN
+F 0 "C38" V 7300 2150 50  0000 L CNN
+F 1 "22nF" V 7300 1850 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7288 1950 50  0001 C CNN
 F 3 "" H 7250 2100 50  0000 C CNN
 	1    7250 2100
 	0    -1   1    0   
 $EndComp
 $Comp
-L Device:C C38
+L Device:C C39
 U 1 1 5A87F5AA
 P 7550 2300
-F 0 "C38" V 7600 2350 50  0000 L CNN
-F 1 "220nF" V 7600 2000 50  0000 L CNN
+F 0 "C39" V 7600 2350 50  0000 L CNN
+F 1 "22nF" V 7600 2050 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 7588 2150 50  0001 C CNN
 F 3 "" H 7550 2300 50  0000 C CNN
 	1    7550 2300
@@ -545,18 +505,18 @@ Wire Wire Line
 Wire Wire Line
 	7400 2300 6950 2300
 Wire Wire Line
-	7400 3900 6950 3900
+	7400 3900 7200 3900
 Wire Wire Line
 	7100 3000 6950 3000
 Wire Wire Line
-	7100 3400 6950 3400
-Text Label 7950 3400 2    60   ~ 0
-GPDI_ETH+
+	7400 3400 6950 3400
+Text Label 8400 3400 2    60   ~ 0
+GPDI_UTIL
 Text Label 8200 3900 2    60   ~ 0
-GPDI_ETH-
-Text Label 8400 3200 2    60   ~ 0
+GPDI_HPD
+Text Label 8450 3200 2    60   ~ 0
 GPDI_CLK-
-Text Label 8400 3000 2    60   ~ 0
+Text Label 8450 3000 2    60   ~ 0
 GPDI_CLK+
 Text Label 8400 2900 2    60   ~ 0
 GPDI_D0-
@@ -582,7 +542,7 @@ Wire Wire Line
 	6300 4450 6500 4450
 Wire Wire Line
 	5050 5450 5150 5450
-Text Notes 7350 5200 0    60   ~ 0
+Text Notes 7550 6200 0    60   ~ 0
 PCB v1.8.1 and higher accept FCI 10029449-111RLF\nwww.amphenol-icc.com\nmouser PN: 649-10029449-111RLF\nhttp://portal.fciconnect.com/Comergent/fci/drawing/10029449.pdf\n\nPCB v1.7 and v1.8 accept\nmouser PN: 538-47151-1001 (Molex)\nhttps://www.molex.com/pdm_docs/sd/471511001_sd.pdf\nmouser PN: 710-685119134923 (Wurth)\nhttps://katalog.we-online.com/em/datasheet/685119134923.pdf
 $Comp
 L pca9306d:PCA9306D U11
@@ -664,4 +624,75 @@ $EndComp
 NoConn ~ 2850 3700
 NoConn ~ 2850 3800
 NoConn ~ 4350 3700
+$Comp
+L Device:R R67
+U 1 1 5F900680
+P 7550 3900
+F 0 "R67" V 7630 3900 50  0000 C CNN
+F 1 "549" V 7550 3900 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7480 3900 50  0001 C CNN
+F 3 "" H 7550 3900 50  0000 C CNN
+	1    7550 3900
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	7350 3300 8750 3300
+Wire Wire Line
+	7050 3300 6950 3300
+Text Label 7950 3300 0    60   ~ 0
+GPDI_CEC
+$Comp
+L Device:R R55
+U 1 1 5F9109EC
+P 7550 3400
+F 0 "R55" V 7450 3400 50  0000 C CNN
+F 1 "10k" V 7550 3400 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7480 3400 50  0001 C CNN
+F 3 "" H 7550 3400 50  0000 C CNN
+F 4 "Leave empty" V 7550 3400 50  0001 C CNN "Note"
+	1    7550 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+5V #PWR095
+U 1 1 58D6907F
+P 8450 3800
+F 0 "#PWR095" H 8450 3650 50  0001 C CNN
+F 1 "+5V" H 8450 3940 50  0000 C CNN
+F 2 "" H 8450 3800 50  0000 C CNN
+F 3 "" H 8450 3800 50  0000 C CNN
+	1    8450 3800
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	7700 3900 8750 3900
+$Comp
+L power:GND #PWR0178
+U 1 1 5F8E2751
+P 7200 4150
+F 0 "#PWR0178" H 7200 3900 50  0001 C CNN
+F 1 "GND" H 7200 4000 50  0000 C CNN
+F 2 "" H 7200 4150 50  0000 C CNN
+F 3 "" H 7200 4150 50  0000 C CNN
+	1    7200 4150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7200 3900 7200 3950
+$Comp
+L Device:D_Zener_Small_ALT D?
+U 1 1 5F8E2758
+P 7200 4050
+AR Path="/58D6BF46/5F8E2758" Ref="D?"  Part="1" 
+AR Path="/58D686D9/5F8E2758" Ref="D30"  Part="1" 
+F 0 "D30" H 7200 3950 50  0000 C CNN
+F 1 "3.6V" H 7200 4150 50  0000 C CNN
+F 2 "Diode_SMD:D_SOD-323_HandSoldering" V 7200 4050 50  0001 C CNN
+F 3 "http://www.taiwansemi.com/products/datasheet/BZT52C2V4S%20SERIES_H1709.pdf" V 7200 4050 50  0001 C CNN
+	1    7200 4050
+	0    1    1    0   
+$EndComp
+Connection ~ 7200 3900
+Wire Wire Line
+	7200 3900 6950 3900
 $EndSCHEMATC
