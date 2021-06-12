@@ -809,6 +809,9 @@ To use 3rd channel for SPDIF audio or compositie video together with
 It can be easily found on ebay, search for
 "3.5mm 4 Pole Male Plug To 3 RCA (Red/Yellow/White) Female Jack Cable".
 
+Compatible cable wiring is "OMTP" as descrbed in the
+[TRRS standards](https://en.wikipedia.org/wiki/Phone_connector_(audio)#TRRS_standards)
+
 WARNING: Sony compatible 3-cinch cables are NOT SUITABLE for ULX3S!
 Sony cables are the most often found in consumer audio/video shops.
 Visually they look identical, but the pinout is different.
@@ -958,6 +961,28 @@ different. wifi_gpio16 and wifi_gpio17 are gone because WROVER
 needs them for internal RAM, but here are many new available, so
 wifi_gpio26 and wifi_gpio27 can be used instead for example.
 
+v3.1.6
+
+New prototype, currently tested.
+
+Small change in ESP32 routing, 
+GPIO0 routed to FPGA clock capable pin,
+EN and GPIO22 changed.
+
+Board has minor problem ESP32 will not boot standalone,
+bitstream must pull up or output high to GPIO0 and then
+pulse EN for ESP32 to boot. "Official" patch is to solder
+15k 0603 resistor at GPIO0 pin which 3rd soldered pin,
+near letter "R" of R33 label. With thin wire 0.1mm connect
+other end of 15k resistor to 3.3V at other end of R33.
+
+v3.1.7
+
+Not yet produced.
+
+Adds R56 resistor which should make ESP32 boot standalone,
+without help of FPGA bitstream.
+
 # Board Versions
 
 This project is open source, freely downloadable so there can be
@@ -997,4 +1022,5 @@ soldered.
     v3.0.3    INEM-KONČAR    220        oct 2019     v20             for sale   M12L2561616A-6TG2T    W25Q128JVSIQ
     v3.0.7    Watterott      88         nov 2019     v20             for sale   AS4C32M16SB-7TCN      W25Q128JVSIQ
     v3.0.8    INEM-KONČAR    1000       jul 2020     v20             for sale   IS42S16160G-7TL-TR    W25Q128JVSIQ
-    v3.1.4    INTERGALAKTIK  1          nov 2020     v31             prototype  MT48LC16M16A2TG-6A    W25Q128JVSIQ
+    v3.1.4    INTERGALAKTIK  1          nov 2020     v314            prototype  MT48LC16M16A2TG-6A    W25Q128JVSIQ
+    v3.1.6    e-RADIONICA    16         may 2021     v316            prototype  IS42S16160G-7TL-TR    W25Q128JVSIQ
